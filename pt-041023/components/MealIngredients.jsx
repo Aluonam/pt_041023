@@ -23,10 +23,17 @@ const MealIngredients = () => {
     console.log("ingredientes",ingredientes)
 
     // Recorrer con .map para sacar listado
+    const listaIngredientes = ingredientes.map((elementoActual)=>{
+        return(
+            <ul>
+                <li>{elementoActual}</li>
+            </ul>
+        )
+    })
 
   return (
     <div>MealIngredients
-        {/* {ingredientes} */}
+        {listaIngredientes}
     </div>
   )
 }
