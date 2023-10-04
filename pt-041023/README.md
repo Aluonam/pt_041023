@@ -1,40 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Sacar datos de un objeto {clave, valor}
 
-## Getting Started
+https://www.themealdb.com/api/json/v1/1/random.php
 
-First, run the development server:
+1. Crear useState para guardar datos de la api
+2. dentro de useEffect consumo api con axios
+3. como la llamada api devuelve un objeto convierto el objeto en un array con clave, valor. con Object.entries(variable)
+4. Filtra para sacar la clave que coinicide con el texto que busco y que ademas el valor no esté vacio. 
+Usando .filter() .startsWith("text")
+5. Se hace .map() para sacar el listado.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```javascript
+
+const [dataAPI, setDataAPI] = useState([])
+
+    useEffect(() => {
+      const apiUrl = `https://www.themealdb.com/api/json/v1/1/random.php`;
+      axios.get(apiUrl)
+        .then( response => setDataAPI(response.data.meals[0]))
+        .catch(error => console.log("error deteceted",error))
+    }, [])
+    
+
+    // La llamada API devuelve un objeto
+    // Convierto el objeto con calve valor a un array que tambien tendrá clave valor. con .entries se crea un subarray por así decirlo.
+    const arrayObj = Object.entries(dataAPI)
+
+    // se filtra para sacar dentro de la clave [0] con .startsWith() que permite comparar el string y además que el valor [1] sea distinto de vacio.
+    const ingredientes = arrayObj.filter((elementoActual)=>elementoActual[0].startsWith("strIngredient") && elementoActual[1]!=="")
+    console.log("ingredientes",ingredientes)
+
+    // Recorrer con .map para sacar listado
+    const listaIngredientes = ingredientes.map((elementoActual)=>{
+        return(
+            <ul>
+                <li>{elementoActual}</li>
+            </ul>
+        )
+    })
+    
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
